@@ -1,5 +1,6 @@
 import { Request } from "express";
 import formidable from "formidable";
+import { FormidableFieldFileType } from "../types";
 
 const form = formidable({
   multiples: true,
@@ -8,10 +9,6 @@ const form = formidable({
 });
 
 export const uploadFileF = (req: Request) => {
-  interface FormidableFieldFileType {
-    fields: formidable.Fields;
-    files: formidable.Files;
-  }
   return new Promise<FormidableFieldFileType>((resolve, reject) => {
     form.parse(req, (err, fields, files) => {
       if (err) reject(err);
