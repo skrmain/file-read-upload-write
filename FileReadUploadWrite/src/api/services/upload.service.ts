@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
 
 import { uploadFileF } from "../../middlewares/uploadFileF";
-import { getFilesInfo, saveFilesInfo } from "../../utils";
+import { getFilesInfo, saveFilesInfoF, saveFilesInfoM } from "../../utils";
 
 export const UploadFileMService = async (req: Request, res: Response) => {
+  if (req.file) {
+    saveFilesInfoM(req.file);
+  } else if (req.files && req.files instanceof Array) {
+    saveFilesInfoM(req.files);
+  }
   res.send({
     message: "Upload Success",
     file: req.file,
@@ -15,7 +20,7 @@ export const UploadFileMService = async (req: Request, res: Response) => {
 export const UploadFileFService = async (req: Request, res: Response) => {
   const result = await uploadFileF(req);
 
-  await saveFilesInfo(result.files);
+  await saveFilesInfoF(result.files);
 
   res.send({ message: "Upload Success", ...result, body: req.body });
 };

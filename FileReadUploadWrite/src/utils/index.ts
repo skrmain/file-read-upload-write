@@ -6,8 +6,9 @@ import { join } from "path";
 import { UploadDataFilePathFromRoot } from "../constants";
 import { FileInfoType } from "../types";
 
+const dataFilePath = join(__dirname, "../..", UploadDataFilePathFromRoot);
+
 export const getFilesInfo = async () => {
-  const dataFilePath = join(__dirname, "../..", UploadDataFilePathFromRoot);
   if (!existsSync(dataFilePath)) {
     writeFile(dataFilePath, "[]");
   }
@@ -25,7 +26,7 @@ export const getFilesInfo = async () => {
   return data;
 };
 
-export const saveFilesInfo = async (filesData: formidable.Files) => {
+export const saveFilesInfoF = async (filesData: formidable.Files) => {
   const filesInfo: FileInfoType[] = [];
   Object.keys(filesData).forEach((value) => {
     const files = filesData[value];
@@ -54,8 +55,41 @@ export const saveFilesInfo = async (filesData: formidable.Files) => {
     }
   });
 
-  const dataFilePath = join(__dirname, "../..", UploadDataFilePathFromRoot);
+  await writeFilesInfo(filesInfo);
+};
 
+export const saveFilesInfoM = async (
+  filesData: Express.Multer.File[] | Express.Multer.File
+) => {
+  const filesInfo: FileInfoType[] = [];
+
+  if (filesData instanceof Array) {
+    filesData.forEach((val2) => {
+      const file: FileInfoType = {
+        mimetype: val2.mimetype,
+        mtime: null,
+        newFilename: val2.filename,
+        originalFilename: val2.originalname,
+        size: val2.size,
+        filepath: val2.path,
+      };
+      filesInfo.push({ ...file });
+    });
+  } else {
+    filesInfo.push({
+      mimetype: filesData.mimetype,
+      mtime: null,
+      newFilename: filesData.filename,
+      originalFilename: filesData.originalname,
+      size: filesData.size,
+      filepath: filesData.path,
+    });
+  }
+
+  await writeFilesInfo(filesInfo);
+};
+
+const writeFilesInfo = async (filesInfo: FileInfoType[]) => {
   const oldInfo = await getFilesInfo();
 
   filesInfo.forEach((val) => {

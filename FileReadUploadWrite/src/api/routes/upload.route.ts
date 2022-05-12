@@ -9,7 +9,7 @@ import {
 
 const router = Router();
 
-router.post("/uploadM", uploadFileM.single("avatar"), UploadFileMService);
+router.post("/uploadM", uploadFileM.array("avatar"), UploadFileMService);
 router.post("/uploadF", UploadFileFService);
 router.get("/uploads", UploadListService);
 
