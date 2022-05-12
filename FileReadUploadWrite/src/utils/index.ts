@@ -3,6 +3,8 @@ import { existsSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { join } from "path";
 
+import logger from "../config/logger";
+
 import { UploadDataFilePathFromRoot } from "../constants";
 import { FileInfoType } from "../types";
 
@@ -10,7 +12,8 @@ const dataFilePath = join(__dirname, "../..", UploadDataFilePathFromRoot);
 
 export const getFilesInfo = async () => {
   if (!existsSync(dataFilePath)) {
-    writeFile(dataFilePath, "[]");
+    logger.info("Data file not exists");
+    await writeFile(dataFilePath, "[]");
   }
   const rawData = await readFile(dataFilePath, {
     encoding: "utf8",
@@ -97,5 +100,6 @@ const writeFilesInfo = async (filesInfo: FileInfoType[]) => {
   });
 
   await writeFile(dataFilePath, JSON.stringify(oldInfo));
+  logger.info("File write success");
   return true;
 };
