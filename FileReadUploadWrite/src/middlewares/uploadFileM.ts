@@ -1,6 +1,9 @@
 import multer from "multer";
 import path from "path";
 
+// import multer from "multer";
+// const upload = multer({ dest: "uploads/" });
+
 // Upload storage Setting
 const DIR = "./uploads";
 
