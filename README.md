@@ -1,11 +1,6 @@
-# NodeJS Microservice
+# file-read-upload-write
 
 ## References
-
-- https://www.rabbitmq.com/tutorials/tutorial-one-python.html
-- https://amqp-node.github.io/amqplib/channel_api.html
-
-> File Read-Upload-Write
 
 - https://www.npmjs.com/package/multer
 - https://www.npmjs.com/package/formidable
