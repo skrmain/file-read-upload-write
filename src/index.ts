@@ -1,5 +1,4 @@
 import express from "express";
-import swaggerUi from "swagger-ui-express";
 
 import UploadRoutes from "./api/routes/upload.route";
 import DownloadRoutes from "./api/routes/download.route";
@@ -8,18 +7,6 @@ import { PORT } from "./constants";
 import logger from "./config/logger";
 
 const app = express();
-
-app.use(express.static("public"));
-
-app.use(
-  "/docs",
-  swaggerUi.serve,
-  swaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: "/swagger.json",
-    },
-  })
-);
 
 app.get("/", (req, res) => {
   logger.log({
@@ -36,28 +23,6 @@ app.get("/", (req, res) => {
   });
 
   res.send({ message: "Server Running..." });
-});
-
-import { Get, Route } from "tsoa";
-
-interface PingResponse {
-  message: string;
-}
-
-@Route("ping")
-export default class PingController {
-  @Get("/")
-  public async getMessage(): Promise<PingResponse> {
-    return {
-      message: "pong",
-    };
-  }
-}
-
-app.get("/ping", async (_req, res) => {
-  const controller = new PingController();
-  const response = await controller.getMessage();
-  return res.send(response);
 });
 
 app.use("/api", UploadRoutes);
